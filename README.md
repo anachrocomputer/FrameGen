@@ -1,7 +1,7 @@
 # FrameGen #
 
 This is an experimental program to generate a sequence of video frames resembling the game "Defender".
-Apart from having a parallax-scrolling background of fields and cluds, that is.
+Apart from having a parallax-scrolling background of fields and clouds, that is.
 
 I wrote it in 2011 as a first step towards a fully interactive program that could display directly on the PC's screen.
 Another iteration used the VGAlib to draw directly to the VGA screen in 320x200 mode.
