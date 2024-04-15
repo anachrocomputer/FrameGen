@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <math.h>
 
@@ -58,12 +59,12 @@
 #define BLACK   (0x00)
 
 /* The frame buffer */
-unsigned char Frame[MAXY][MAXX];
-unsigned char Bgimg[MAXY][MAXX_BG];
+uint8_t Frame[MAXY][MAXX];
+uint8_t Bgimg[MAXY][MAXX_BG];
 
 #define MAXSPRITES (2)
 
-static unsigned char Player[8][8] = {
+static uint8_t Player[8][8] = {
    {     0,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,      0},
    { WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE},
    { WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE},
@@ -73,7 +74,7 @@ static unsigned char Player[8][8] = {
    { WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE},
    {     0,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,  WHITE,      0}
 };
-static unsigned char Missile[6][7] = {
+static uint8_t Missile[6][7] = {
    {     0,  WHITE,  WHITE,  WHITE,  RED,  RED,    0},
    { WHITE,    RED,    RED,   BLUE,  RED,  RED,  RED},
    { WHITE,    RED,   BLUE,   BLUE, BLUE,  RED,  RED},
@@ -96,13 +97,13 @@ struct Sprite {
 struct Sprite SpriteTab[MAXSPRITES];
 
 /* Look-up tables for audio synthesis */
-short int Wsample[MAXVOICES][NSAMPLES];
-short int Wenvelope[MAXENVELOPES][NENVSTEPS];
+int16_t Wsample[MAXVOICES][NSAMPLES];
+int16_t Wenvelope[MAXENVELOPES][NENVSTEPS];
 
 #define LSAMPLES (25552 / 2)
-short int Wlaser[LSAMPLES];
+int16_t Wlaser[LSAMPLES];
 
-unsigned char Font[256][16] = {
+uint8_t Font[256][16] = {
 #include "font2.h"
 };
 
@@ -125,30 +126,30 @@ struct ToneRec ToneGen[MAXTONES];
 /* Structure of WAV file headers */
 struct WavHeader {
    char ChunkID[4];
-   long int ChunkSize;
+   uint32_t ChunkSize;
    char Format[4];
 };
 
 struct FmtHeader {
    char SubChunkID[4];
-   long int SubChunkSize;
-   short int AudioFormat;
-   short int NumChannels;
-   long int SampleRate;
-   long int ByteRate;
-   short int BlockAlign;
-   short int BitsPerSample;
+   uint32_t SubChunkSize;
+   uint16_t AudioFormat;
+   uint16_t NumChannels;
+   uint32_t SampleRate;
+   uint32_t ByteRate;
+   uint16_t BlockAlign;
+   uint16_t BitsPerSample;
 };
 
 struct DataHeader {
    char SubChunkID[4];
-   long int SubChunkSize;
+   uint32_t SubChunkSize;
 };
 
 /* A single sample with left and right channels */
 struct AudioSample {
-   short int l;
-   short int r;
+   int16_t l;
+   int16_t r;
 };
 
 /* The synthesised or sampled audio signal */
@@ -317,7 +318,7 @@ int load_sounds (void)
 {
    FILE *laser;
    int i;
-   short int sample;
+   int16_t sample;
    
    if ((laser = fopen ("laser-02.raw", "r")) == NULL) {
       perror ("laser-02.raw");
@@ -342,7 +343,7 @@ int generate_wavetables (void)
    int i;
    double theta;
    double x;
-   short int b;
+   int16_t b;
    
    /* Generate lookup tables for audio waveforms */
    for (i = 0; i < NSAMPLES; i++) {
@@ -611,7 +612,7 @@ int draw_sprites (int frame)
    int s;
    int sx, sy;
    struct Sprite *sp;
-   unsigned char *tp;
+   uint8_t *tp;
    
    /* Loop through sprites, drawing the visible ones */
    /* TODO: loop through in Z-order, from the rear */
@@ -643,7 +644,7 @@ int draw_overlay (int frame)
    int i;
    char score[32];
    int len;
-   unsigned char bitmask;
+   uint8_t bitmask;
    
    sprintf (score, "%06d", frame);
    len = strlen (score);
@@ -676,7 +677,7 @@ int render_audio (int frame)
    int ph;
    int en;
    static int l;
-   static unsigned char volumeCounter = 0;
+   static uint8_t volumeCounter = 0;
    
    for (i = 0; i < MAXSAMPLES; i++) {
       Audio[i].l = 0;
@@ -738,14 +739,14 @@ int writeframe (int frame)
 void export_image (const char *fname)
 {
    struct Pixel {
-      unsigned char r;
-      unsigned char g;
-      unsigned char b;
+      uint8_t r;
+      uint8_t g;
+      uint8_t b;
    };
    FILE *ppm;
    int x, y;
 #ifndef PPM_ASCII
-   unsigned char pixarray[MAXX][3];
+   uint8_t pixarray[MAXX][3];
 #endif
    struct Pixel pel;
    
@@ -805,3 +806,4 @@ void close_audio (void)
 {
    fclose (Wav);
 }
+
