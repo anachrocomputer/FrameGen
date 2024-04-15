@@ -3,10 +3,11 @@
 This is an experimental program to generate a sequence of video frames
 resembling the game "Defender".
 Apart from having a parallax-scrolling background of fields and clouds, that is.
+Maybe it's more like "Scramble", but I've only played the Vectrex version of that game.
 
 I wrote it in December 2011 as a first step towards a fully interactive program that could
 display directly on the PC's screen.
-Another iteration used the VGAlib to draw directly to the VGA screen in 320x200 mode.
+Another iteration used the SVGAlib to draw directly to the VGA screen in 320x200 mode.
 But this version generates numerous PPM format still images and then assembles them,
 along with a soundtrack, into a video file by using 'ffmpeg'.
 
@@ -48,4 +49,8 @@ and then invokes 'ffmpeg' to generate the video file from the many PPM images.
 To clean up the generated frames and audio, but leave the video intact, use:
 
 `make clean`
+
+Another useful tool is Audacity, for checking the audio file:
+
+`sudo apt install audacity`
 
